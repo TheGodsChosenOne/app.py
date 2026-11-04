@@ -2,10 +2,12 @@ import streamlit as st
 import requests
 import pandas as pd
 import sqlite3
+import os
 from datetime import datetime
 
-# --- 1. ROBUST SQLITE PERSISTENCE LAYER ---
-DB_FILE = "openodds_ledger.db"
+# --- 1. HARDENED SQLITE PERSISTENCE LAYER ---
+# Using an absolute path ensures Streamlit Cloud doesn't get stuck in an infinite loading loop
+DB_FILE = os.path.join(os.getcwd(), "openodds_ledger.db")
 
 def init_database():
     """Initializes the database schema safely using context managers."""
@@ -189,4 +191,3 @@ def main():
                                     if "Over" in dk_sides and "Under" in fd_sides:
                                         do, fu = dk_sides["Over"], fd_sides["Under"]
                                         if do["line"] == fu["line"] and do["line"] > 0:
-                                            p1 = american_to_implied(do["odds"])
